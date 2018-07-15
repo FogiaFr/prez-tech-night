@@ -7,7 +7,10 @@ import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+import java.util.function.BiFunction;
 import java.util.function.Predicate;
+import java.util.function.ToDoubleFunction;
 import java.util.stream.Collectors;
 
 /**
@@ -59,40 +62,111 @@ public class LambdasAntiSeche {
 
     class ProductService {
         ProductDao productDao;
+        DiscountDao discountDao;
 
-        Long getBasketCostVersion1() {
+        Double getBasketCostVersion1() {
             List<Product> products = productDao.getProductsInBasket();
 
 //            return products.stream()
 //                    .map(Product::getPrice)
 //                    .collect(Collectors.summingLong(price -> price));
             return products.stream()
-                    .collect(Collectors.summingLong(Product::getPrice));
+                    .collect(Collectors.summingDouble(Product::getPrice));
         }
 
-        Long getBasketCostVersion2() {
+        Double getBasketCostVersion2() {
             List<Product> products = productDao.getProductsInBasket();
             List<SectionPart> sections = productDao.getSectionOfBasket();
-            Map<Long, Long> priceByProductIds = sections.stream()
+            Map<Long, Double> priceByProductIds = sections.stream()
                     .collect(Collectors.toMap(sp -> sp.getProduct().getId(), SectionPart::getPrice));
 
             return products.stream()
-                    .map(product -> {
-                        Long price = priceByProductIds.get(product.getId());
+                    .collect(Collectors.summingDouble(product -> {
+                        Double price = priceByProductIds.get(product.getId());
                         if (price == null) {
                             price = product.getPrice();
                         }
                         return price;
-                    })
-                    .collect(Collectors.summingLong(price -> price));
+                    }));
         }
 
+        Double getBasketCostVersion3() {
+            List<Product> products = productDao.getProductsInBasket();
+            List<SectionPart> sections = productDao.getSectionOfBasket();
+            Map<Long, Double> priceByProductIds = sections.stream()
+                    .collect(Collectors.toMap(sp -> sp.getProduct().getId(), SectionPart::getPrice));
+
+            return products.stream()
+                    .collect(Collectors.summingDouble(product -> getPrice(product, priceByProductIds)));
+        }
+
+        /**
+         * @param product           whose we want the price.
+         * @param priceByProductIds Map of id of product that have a special price.
+         * @return the price of the product.
+         */
+        private Double getPrice(Product product, Map<Long, Double> priceByProductIds) {
+            Double price = priceByProductIds.get(product.getId());
+            if (price == null) {
+                price = product.getPrice();
+            }
+            return price;
+        }
+
+        private Double getPrice2(Product product, Map<Long, Double> priceByProductIds) {
+            return Optional.ofNullable(priceByProductIds.get(product.getId())).orElse(product.getPrice());
+        }
+
+        private Double getPrice3(Product product, Map<Long, Double> priceByProductIds, List<Discount> discounts) {
+            Double price = Optional.ofNullable(priceByProductIds.get(product.getId())).orElse(product.getPrice());
+
+            Double discountAmount = discounts.stream()
+                    .filter(discount -> product.getType() == discount.getProductType())
+                    .collect(Collectors.summingDouble(discount -> discount.getDiscountFlat() + price * discount.getDiscountPercentage()));
+
+            return price - discountAmount;
+        }
+
+        Double getBasketCostVersion4() {
+            List<Product> products = productDao.getProductsInBasket();
+            List<SectionPart> sections = productDao.getSectionOfBasket();
+            List<Discount> discounts = discountDao.getDiscounts();
+            Map<Long, Double> priceByProductIds = sections.stream()
+                    .collect(Collectors.toMap(sp -> sp.getProduct().getId(), SectionPart::getPrice));
+
+            return products.stream()
+                    .collect(Collectors.summingDouble(product -> getPrice3(product, priceByProductIds, discounts)));
+        }
+
+        Double getBasketCostVersion5() {
+            List<Product> products = productDao.getProductsInBasket();
+            List<SectionPart> sections = productDao.getSectionOfBasket();
+            List<Discount> discounts = discountDao.getDiscounts();
+            Map<Long, Double> priceByProductIds = sections.stream()
+                    .collect(Collectors.toMap(sp -> sp.getProduct().getId(), SectionPart::getPrice));
+            BiFunction<Product, Double, Double> getDiscount = (product, price) -> discounts.stream()
+                    .filter(discount -> product.getType() == discount.getProductType())
+                    .collect(Collectors.summingDouble(discount -> discount.getDiscountFlat() + price * discount.getDiscountPercentage()));
+
+            ToDoubleFunction<Product> getPrice = product -> {
+                Double price = Optional.ofNullable(priceByProductIds.get(product.getId())).orElse(product.getPrice());
+
+                Double discountAmount = getDiscount.apply(product, price);
+
+                return price - discountAmount;
+            };
+
+            return products.stream()
+                    .collect(Collectors.summingDouble(getPrice));
+        }
+
+        // ???
         Double getBasketCost() {
             List<Product> products = productDao.getProductsInBasket();
             List<SectionPart> sections = productDao.getSectionOfBasket();
             Map<Long, Double> priceByProductIds = sections.stream()
                     .collect(Collectors.groupingBy(sp -> sp.getProduct().getId(),
-                            Collectors.averagingLong(SectionPart::getPrice)));
+                            Collectors.averagingDouble(SectionPart::getPrice)));
             return products.stream()
                     .collect(Collectors.summingDouble(product -> priceByProductIds.get(product.getId())));
         }
@@ -106,6 +180,10 @@ public class LambdasAntiSeche {
 
     interface Filter {
         boolean filter(Product product);
+    }
+
+    interface DiscountDao {
+        List<Discount> getDiscounts();
     }
 
     static List<Product> createList() {
@@ -123,13 +201,25 @@ public class LambdasAntiSeche {
         private final String code;
         private LocalDateTime creationDate;
         private boolean activated;
-        private Long price;
+        private Double price;
+        private ProductTypeEnum type;
+    }
+
+    enum ProductTypeEnum {
+
     }
 
     @Data
     static class SectionPart {
         private final Long id;
         private final Product product;
-        private final Long price;
+        private final Double price;
+    }
+
+    @Data
+    static class Discount {
+        private ProductTypeEnum productType;
+        private Double discountFlat;
+        private Double discountPercentage;
     }
 }
