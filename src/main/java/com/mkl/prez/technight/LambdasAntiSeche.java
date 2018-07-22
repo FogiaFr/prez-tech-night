@@ -60,7 +60,7 @@ public class LambdasAntiSeche {
 //        filter(products, filter);
     }
 
-    class ProductService {
+    static class ProductService {
         ProductDao productDao;
         DiscountDao discountDao;
 
@@ -78,7 +78,7 @@ public class LambdasAntiSeche {
             List<Product> products = productDao.getProductsInBasket();
             List<SectionPart> sections = productDao.getSectionOfBasket();
             Map<Long, Double> priceByProductIds = sections.stream()
-                    .collect(Collectors.toMap(sp -> sp.getProduct().getId(), SectionPart::getPrice));
+                    .collect(Collectors.toMap(SectionPart::getProductId, SectionPart::getPrice));
 
             return products.stream()
                     .collect(Collectors.summingDouble(product -> {
@@ -94,7 +94,7 @@ public class LambdasAntiSeche {
             List<Product> products = productDao.getProductsInBasket();
             List<SectionPart> sections = productDao.getSectionOfBasket();
             Map<Long, Double> priceByProductIds = sections.stream()
-                    .collect(Collectors.toMap(sp -> sp.getProduct().getId(), SectionPart::getPrice));
+                    .collect(Collectors.toMap(SectionPart::getProductId, SectionPart::getPrice));
 
             return products.stream()
                     .collect(Collectors.summingDouble(product -> getPrice(product, priceByProductIds)));
@@ -132,7 +132,7 @@ public class LambdasAntiSeche {
             List<SectionPart> sections = productDao.getSectionOfBasket();
             List<Discount> discounts = discountDao.getDiscounts();
             Map<Long, Double> priceByProductIds = sections.stream()
-                    .collect(Collectors.toMap(sp -> sp.getProduct().getId(), SectionPart::getPrice));
+                    .collect(Collectors.toMap(SectionPart::getProductId, SectionPart::getPrice));
 
             return products.stream()
                     .collect(Collectors.summingDouble(product -> getPrice3(product, priceByProductIds, discounts)));
@@ -143,7 +143,7 @@ public class LambdasAntiSeche {
             List<SectionPart> sections = productDao.getSectionOfBasket();
             List<Discount> discounts = discountDao.getDiscounts();
             Map<Long, Double> priceByProductIds = sections.stream()
-                    .collect(Collectors.toMap(sp -> sp.getProduct().getId(), SectionPart::getPrice));
+                    .collect(Collectors.toMap(SectionPart::getProductId, SectionPart::getPrice));
             BiFunction<Product, Double, Double> getDiscount = (product, price) -> discounts.stream()
                     .filter(discount -> product.getType() == discount.getProductType())
                     .collect(Collectors.summingDouble(discount -> discount.getDiscountFlat() + price * discount.getDiscountPercentage()));
@@ -165,7 +165,7 @@ public class LambdasAntiSeche {
             List<Product> products = productDao.getProductsInBasket();
             List<SectionPart> sections = productDao.getSectionOfBasket();
             Map<Long, Double> priceByProductIds = sections.stream()
-                    .collect(Collectors.groupingBy(sp -> sp.getProduct().getId(),
+                    .collect(Collectors.groupingBy(SectionPart::getProductId,
                             Collectors.averagingDouble(SectionPart::getPrice)));
             return products.stream()
                     .collect(Collectors.summingDouble(product -> priceByProductIds.get(product.getId())));
@@ -201,25 +201,25 @@ public class LambdasAntiSeche {
         private final String code;
         private LocalDateTime creationDate;
         private boolean activated;
-        private Double price;
+        private double price;
         private ProductTypeEnum type;
     }
 
     enum ProductTypeEnum {
-
+        VEGETABLE, HIFI, BOOK
     }
 
     @Data
     static class SectionPart {
         private final Long id;
-        private final Product product;
-        private final Double price;
+        private final Long productId;
+        private final double price;
     }
 
     @Data
     static class Discount {
-        private ProductTypeEnum productType;
-        private Double discountFlat;
-        private Double discountPercentage;
+        private final ProductTypeEnum productType;
+        private double discountFlat;
+        private double discountPercentage;
     }
 }
