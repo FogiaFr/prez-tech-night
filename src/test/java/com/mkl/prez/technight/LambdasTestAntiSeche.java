@@ -379,4 +379,156 @@ public class LambdasTestAntiSeche {
             return product;
         }
     }
+
+    @Test
+    public void testGetBasketCostVersion5GWT() {
+        BasketCostBuilderGWT.create(productDao, discountDao)
+                .addProduct(ProductBuilderGWT.create().price(12d))
+                .whenGetBasketCostVersion5(productService)
+                .thenResultShouldBe(12d);
+
+        BasketCostBuilderGWT.create(productDao, discountDao)
+                .addProduct(ProductBuilderGWT.create().price(12d))
+                .addProduct(ProductBuilderGWT.create().price(3d))
+                .whenGetBasketCostVersion5(productService)
+                .thenResultShouldBe(15d);
+
+        BasketCostBuilderGWT.create(productDao, discountDao)
+                .addProduct(ProductBuilderGWT.create().price(12d))
+                .addProduct(ProductBuilderGWT.create().price(3d).withSection(SectionPartBuilderGWT.create().price(5d)))
+                .whenGetBasketCostVersion5(productService)
+                .thenResultShouldBe(17d);
+
+        BasketCostBuilderGWT.create(productDao, discountDao)
+                .addProduct(ProductBuilderGWT.create().price(12d))
+                .addProduct(ProductBuilderGWT.create().price(3d).withSection(SectionPartBuilderGWT.create().price(5d)))
+                .whenGetBasketCostVersion5(productService)
+                .thenResultShouldBe(17d);
+
+        BasketCostBuilderGWT.create(productDao, discountDao)
+                .addProduct(ProductBuilderGWT.create().price(12d))
+                .addProduct(ProductBuilderGWT.create().price(3d).type(LambdasAntiSeche.ProductTypeEnum.BOOK).withSection(SectionPartBuilderGWT.create().price(5d)))
+                .addDiscount(createDiscount(LambdasAntiSeche.ProductTypeEnum.BOOK, 1d, null))
+                .whenGetBasketCostVersion5(productService)
+                .thenResultShouldBe(16d);
+
+        BasketCostBuilderGWT.create(productDao, discountDao)
+                .addProduct(ProductBuilderGWT.create().price(12d))
+                .addProduct(ProductBuilderGWT.create().price(3d).type(LambdasAntiSeche.ProductTypeEnum.BOOK).withSection(SectionPartBuilderGWT.create().price(5d)))
+                .addDiscount(createDiscount(LambdasAntiSeche.ProductTypeEnum.BOOK, 1d, 0.1d))
+                .whenGetBasketCostVersion5(productService)
+                .thenResultShouldBe(15.5d);
+    }
+
+    private static class BasketCostBuilderGWT {
+        static long cpt = 1;
+        LambdasAntiSeche.ProductDao productDao;
+        LambdasAntiSeche.DiscountDao discountDao;
+        List<LambdasAntiSeche.Product> products = new ArrayList<>();
+        List<LambdasAntiSeche.SectionPart> sections = new ArrayList<>();
+        List<LambdasAntiSeche.Discount> discounts = new ArrayList<>();
+        Double result;
+
+        private BasketCostBuilderGWT(LambdasAntiSeche.ProductDao productDao, LambdasAntiSeche.DiscountDao discountDao) {
+            this.productDao = productDao;
+            this.discountDao = discountDao;
+        }
+
+        static BasketCostBuilderGWT create(LambdasAntiSeche.ProductDao productDao, LambdasAntiSeche.DiscountDao discountDao) {
+            return new BasketCostBuilderGWT(productDao, discountDao);
+        }
+
+        BasketCostBuilderGWT addProduct(ProductBuilderGWT productBuilder) {
+            products.add(productBuilder.product(cpt));
+            LambdasAntiSeche.SectionPart sectionPart = productBuilder.sectionPart(cpt);
+            if (sectionPart != null) {
+                sections.add(sectionPart);
+            }
+            cpt++;
+            return this;
+        }
+
+        BasketCostBuilderGWT addSection(LambdasAntiSeche.SectionPart sectionPart) {
+            sections.add(sectionPart);
+            return this;
+        }
+
+        BasketCostBuilderGWT addDiscount(LambdasAntiSeche.Discount discount) {
+            discounts.add(discount);
+            return this;
+        }
+
+        BasketCostBuilderGWT whenGetBasketCostVersion5(LambdasAntiSeche.ProductService productService) {
+            sections.add(createSection(102L, 666L, 999d));
+
+            Mockito.when(productDao.getProductsInBasket()).thenReturn(products);
+            Mockito.when(productDao.getSectionOfBasket()).thenReturn(sections);
+            Mockito.when(discountDao.getDiscounts()).thenReturn(discounts);
+
+            result = productService.getBasketCostVersion5();
+
+            return this;
+        }
+
+        void thenResultShouldBe(Double result) {
+            Assert.assertEquals(result, this.result, EPSILON);
+        }
+    }
+
+    private static class ProductBuilderGWT {
+        double price;
+        LambdasAntiSeche.ProductTypeEnum type;
+        SectionPartBuilderGWT sectionPartBuilder;
+
+        static ProductBuilderGWT create() {
+            return new ProductBuilderGWT();
+        }
+
+        ProductBuilderGWT price(double price) {
+            this.price = price;
+            return this;
+        }
+
+        ProductBuilderGWT type(LambdasAntiSeche.ProductTypeEnum type) {
+            this.type = type;
+            return this;
+        }
+
+        ProductBuilderGWT withSection(SectionPartBuilderGWT sectionPartBuilder) {
+            this.sectionPartBuilder = sectionPartBuilder;
+            return this;
+        }
+
+        LambdasAntiSeche.Product product(Long idProduct) {
+            LambdasAntiSeche.Product product = new LambdasAntiSeche.Product(idProduct, "osef");
+            product.setPrice(price);
+            product.setType(type);
+            return product;
+        }
+
+        LambdasAntiSeche.SectionPart sectionPart(Long idProduct) {
+            if (sectionPartBuilder == null) {
+                return null;
+            }
+
+            return sectionPartBuilder.sectionPart(idProduct, idProduct);
+        }
+    }
+
+    private static class SectionPartBuilderGWT {
+        double price;
+
+        static SectionPartBuilderGWT create() {
+            return new SectionPartBuilderGWT();
+        }
+
+        SectionPartBuilderGWT price(double price) {
+            this.price = price;
+            return this;
+        }
+
+        LambdasAntiSeche.SectionPart sectionPart(Long id, Long idProduct) {
+            return new LambdasAntiSeche.SectionPart(id, idProduct, price);
+        }
+    }
 }
