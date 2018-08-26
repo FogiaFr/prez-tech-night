@@ -2,6 +2,7 @@ package com.mkl.prez.technight;
 
 import lombok.Data;
 
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 
@@ -14,20 +15,61 @@ public class Lambdas {
 
 
     public static void main(String... args) {
-        List<ProductDto> products = createList();
+        List<Product> products = createList();
     }
 
-    static List<ProductDto> createList() {
-        return Arrays.asList(new ProductDto(1L, "first"),
-                new ProductDto(2L, "seconf"),
-                new ProductDto(3L, "third"),
-                new ProductDto(4L, "fourth"),
-                new ProductDto(5L, "fifth"));
+    static List<Product> createList() {
+        return Arrays.asList(new Product(1L, "first"),
+                new Product(2L, "seconf"),
+                new Product(3L, "third"),
+                new Product(4L, "fourth"),
+                new Product(5L, "fifth"));
+    }
+
+    static class ProductService {
+        ProductDao productDao;
+        DiscountDao discountDao;
+
+        Double getBasketCost() {
+            return null;
+        }
+    }
+
+    interface ProductDao {
+        List<Product> getProductsInBasket();
+
+        List<SectionPart> getSectionOfBasket();
+    }
+
+    interface DiscountDao {
+        List<Discount> getDiscounts();
     }
 
     @Data
-    static class ProductDto {
+    static class Product {
         private final Long id;
         private final String code;
+        private LocalDateTime creationDate;
+        private boolean activated;
+        private double price;
+        private ProductTypeEnum type;
+    }
+
+    enum ProductTypeEnum {
+        VEGETABLE, HIFI, BOOK
+    }
+
+    @Data
+    static class SectionPart {
+        private final Long id;
+        private final Long productId;
+        private final double price;
+    }
+
+    @Data
+    static class Discount {
+        private final ProductTypeEnum productType;
+        private double discountFlat;
+        private double discountPercentage;
     }
 }

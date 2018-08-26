@@ -3,7 +3,6 @@ package com.mkl.prez.technight;
 import lombok.Data;
 
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -19,6 +18,18 @@ import java.util.stream.Collectors;
  * @author MKL.
  */
 public class LambdasAntiSeche {
+
+    interface Filter {
+        boolean filter(Product product);
+    }
+
+    static List<Product> createList() {
+        return Arrays.asList(new Product(1L, "first"),
+                new Product(2L, "second"),
+                new Product(3L, "third"),
+                new Product(4L, "fourth"),
+                new Product(5L, "fifth"));
+    }
 
     static void filter(List<Product> products, Predicate<Product> predicate) {
         products.stream()
@@ -52,6 +63,7 @@ public class LambdasAntiSeche {
         });
 
         filter(products, p -> p.getId() <= 3L);
+        filterALAncienne(products, p -> p.getId() <= 3L);
 
         Predicate<Product> pred = p -> p.getId() <= 3L;
         Filter filter = p -> p.getId() <= 3L;
@@ -178,21 +190,8 @@ public class LambdasAntiSeche {
         List<SectionPart> getSectionOfBasket();
     }
 
-    interface Filter {
-        boolean filter(Product product);
-    }
-
     interface DiscountDao {
         List<Discount> getDiscounts();
-    }
-
-    static List<Product> createList() {
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        return Arrays.asList(new Product(1L, "first"),
-                new Product(2L, "second"),
-                new Product(3L, "third"),
-                new Product(4L, "fourth"),
-                new Product(5L, "fifth"));
     }
 
     @Data

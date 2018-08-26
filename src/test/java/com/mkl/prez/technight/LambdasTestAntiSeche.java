@@ -6,10 +6,12 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.mkl.prez.technight.LambdasAntiSeche.*;
 
 /**
  * Description of the class.
@@ -20,18 +22,18 @@ import java.util.List;
 public class LambdasTestAntiSeche {
     private static final double EPSILON = 0.0001d;
     @InjectMocks
-    private LambdasAntiSeche.ProductService productService;
+    private ProductService productService;
 
     @Mock
-    private LambdasAntiSeche.ProductDao productDao;
+    private ProductDao productDao;
 
     @Mock
-    private LambdasAntiSeche.DiscountDao discountDao;
+    private DiscountDao discountDao;
 
     @Test
     public void testGetBasketCostVersion1() {
         List<LambdasAntiSeche.Product> products = new ArrayList<>();
-        LambdasAntiSeche.Product product = new LambdasAntiSeche.Product(1L, "toto");
+        Product product = new Product(1L, "toto");
         product.setPrice(12d);
         products.add(product);
 
@@ -39,7 +41,7 @@ public class LambdasTestAntiSeche {
 
         Assert.assertEquals(12d, productService.getBasketCostVersion1(), EPSILON);
 
-        product = new LambdasAntiSeche.Product(2L, "tata");
+        product = new Product(2L, "tata");
         product.setPrice(3d);
         products.add(product);
 
@@ -49,7 +51,7 @@ public class LambdasTestAntiSeche {
     @Test
     public void testGetBasketCostVersion2() {
         List<LambdasAntiSeche.Product> products = new ArrayList<>();
-        LambdasAntiSeche.Product product = new LambdasAntiSeche.Product(1L, "toto");
+        Product product = new Product(1L, "toto");
         product.setPrice(12d);
         products.add(product);
 
@@ -57,21 +59,21 @@ public class LambdasTestAntiSeche {
 
         Assert.assertEquals(12d, productService.getBasketCostVersion2(), EPSILON);
 
-        product = new LambdasAntiSeche.Product(2L, "tata");
+        product = new Product(2L, "tata");
         product.setPrice(3d);
         products.add(product);
 
         Assert.assertEquals(15d, productService.getBasketCostVersion2(), EPSILON);
 
         List<LambdasAntiSeche.SectionPart> sections = new ArrayList<>();
-        LambdasAntiSeche.SectionPart section = new LambdasAntiSeche.SectionPart(101L, 2L, 5d);
+        SectionPart section = new SectionPart(101L, 2L, 5d);
         sections.add(section);
 
         Mockito.when(productDao.getSectionOfBasket()).thenReturn(sections);
 
         Assert.assertEquals(17d, productService.getBasketCostVersion2(), EPSILON);
 
-        section = new LambdasAntiSeche.SectionPart(102L, 666L, 999d);
+        section = new SectionPart(102L, 666L, 999d);
         sections.add(section);
 
         Assert.assertEquals(17d, productService.getBasketCostVersion2(), EPSILON);
@@ -80,7 +82,7 @@ public class LambdasTestAntiSeche {
     @Test
     public void testGetBasketCostVersion3() {
         List<LambdasAntiSeche.Product> products = new ArrayList<>();
-        LambdasAntiSeche.Product product = new LambdasAntiSeche.Product(1L, "toto");
+        Product product = new Product(1L, "toto");
         product.setPrice(12d);
         products.add(product);
 
@@ -88,21 +90,21 @@ public class LambdasTestAntiSeche {
 
         Assert.assertEquals(12d, productService.getBasketCostVersion3(), EPSILON);
 
-        product = new LambdasAntiSeche.Product(2L, "tata");
+        product = new Product(2L, "tata");
         product.setPrice(3d);
         products.add(product);
 
         Assert.assertEquals(15d, productService.getBasketCostVersion3(), EPSILON);
 
         List<LambdasAntiSeche.SectionPart> sections = new ArrayList<>();
-        LambdasAntiSeche.SectionPart section = new LambdasAntiSeche.SectionPart(101L, 2L, 5d);
+        SectionPart section = new SectionPart(101L, 2L, 5d);
         sections.add(section);
 
         Mockito.when(productDao.getSectionOfBasket()).thenReturn(sections);
 
         Assert.assertEquals(17d, productService.getBasketCostVersion3(), EPSILON);
 
-        section = new LambdasAntiSeche.SectionPart(102L, 666L, 999d);
+        section = new SectionPart(102L, 666L, 999d);
         sections.add(section);
 
         Assert.assertEquals(17d, productService.getBasketCostVersion3(), EPSILON);
@@ -111,7 +113,7 @@ public class LambdasTestAntiSeche {
     @Test
     public void testGetBasketCostVersion4() {
         List<LambdasAntiSeche.Product> products = new ArrayList<>();
-        LambdasAntiSeche.Product product = new LambdasAntiSeche.Product(1L, "toto");
+        Product product = new Product(1L, "toto");
         product.setPrice(12d);
         products.add(product);
 
@@ -119,30 +121,30 @@ public class LambdasTestAntiSeche {
 
         Assert.assertEquals(12d, productService.getBasketCostVersion4(), EPSILON);
 
-        product = new LambdasAntiSeche.Product(2L, "tata");
+        product = new Product(2L, "tata");
         product.setPrice(3d);
         products.add(product);
 
         Assert.assertEquals(15d, productService.getBasketCostVersion4(), EPSILON);
 
         List<LambdasAntiSeche.SectionPart> sections = new ArrayList<>();
-        LambdasAntiSeche.SectionPart section = new LambdasAntiSeche.SectionPart(101L, 2L, 5d);
+        SectionPart section = new SectionPart(101L, 2L, 5d);
         sections.add(section);
 
         Mockito.when(productDao.getSectionOfBasket()).thenReturn(sections);
 
         Assert.assertEquals(17d, productService.getBasketCostVersion4(), EPSILON);
 
-        section = new LambdasAntiSeche.SectionPart(102L, 666L, 999d);
+        section = new SectionPart(102L, 666L, 999d);
         sections.add(section);
 
         Assert.assertEquals(17d, productService.getBasketCostVersion4(), EPSILON);
 
         List<LambdasAntiSeche.Discount> discounts = new ArrayList<>();
-        LambdasAntiSeche.Discount discount = new LambdasAntiSeche.Discount(LambdasAntiSeche.ProductTypeEnum.BOOK);
+        Discount discount = new Discount(ProductTypeEnum.BOOK);
         discount.setDiscountFlat(1d);
         discounts.add(discount);
-        product.setType(LambdasAntiSeche.ProductTypeEnum.BOOK);
+        product.setType(ProductTypeEnum.BOOK);
 
         Mockito.when(discountDao.getDiscounts()).thenReturn(discounts);
 
@@ -156,7 +158,7 @@ public class LambdasTestAntiSeche {
     @Test
     public void testGetBasketCostVersion5() {
         List<LambdasAntiSeche.Product> products = new ArrayList<>();
-        LambdasAntiSeche.Product product = new LambdasAntiSeche.Product(1L, "toto");
+        Product product = new Product(1L, "toto");
         product.setPrice(12d);
         products.add(product);
 
@@ -164,30 +166,30 @@ public class LambdasTestAntiSeche {
 
         Assert.assertEquals(12d, productService.getBasketCostVersion5(), EPSILON);
 
-        product = new LambdasAntiSeche.Product(2L, "tata");
+        product = new Product(2L, "tata");
         product.setPrice(3d);
         products.add(product);
 
         Assert.assertEquals(15d, productService.getBasketCostVersion5(), EPSILON);
 
         List<LambdasAntiSeche.SectionPart> sections = new ArrayList<>();
-        LambdasAntiSeche.SectionPart section = new LambdasAntiSeche.SectionPart(101L, 2L, 5d);
+        SectionPart section = new SectionPart(101L, 2L, 5d);
         sections.add(section);
 
         Mockito.when(productDao.getSectionOfBasket()).thenReturn(sections);
 
         Assert.assertEquals(17d, productService.getBasketCostVersion5(), EPSILON);
 
-        section = new LambdasAntiSeche.SectionPart(102L, 666L, 999d);
+        section = new SectionPart(102L, 666L, 999d);
         sections.add(section);
 
         Assert.assertEquals(17d, productService.getBasketCostVersion5(), EPSILON);
 
         List<LambdasAntiSeche.Discount> discounts = new ArrayList<>();
-        LambdasAntiSeche.Discount discount = new LambdasAntiSeche.Discount(LambdasAntiSeche.ProductTypeEnum.BOOK);
+        Discount discount = new Discount(ProductTypeEnum.BOOK);
         discount.setDiscountFlat(1d);
         discounts.add(discount);
-        product.setType(LambdasAntiSeche.ProductTypeEnum.BOOK);
+        product.setType(ProductTypeEnum.BOOK);
 
         Mockito.when(discountDao.getDiscounts()).thenReturn(discounts);
 
@@ -207,7 +209,7 @@ public class LambdasTestAntiSeche {
 
         Assert.assertEquals(12d, productService.getBasketCostVersion5(), EPSILON);
 
-        products.add(createProduct(2L, "tata", 3d, LambdasAntiSeche.ProductTypeEnum.BOOK));
+        products.add(createProduct(2L, "tata", 3d, ProductTypeEnum.BOOK));
 
         Assert.assertEquals(15d, productService.getBasketCostVersion5(), EPSILON);
 
@@ -223,7 +225,7 @@ public class LambdasTestAntiSeche {
         Assert.assertEquals(17d, productService.getBasketCostVersion5(), EPSILON);
 
         List<LambdasAntiSeche.Discount> discounts = new ArrayList<>();
-        LambdasAntiSeche.Discount discount = createDiscount(LambdasAntiSeche.ProductTypeEnum.BOOK, 1d, null);
+        Discount discount = createDiscount(ProductTypeEnum.BOOK, 1d, null);
         discounts.add(discount);
 
         Mockito.when(discountDao.getDiscounts()).thenReturn(discounts);
@@ -235,19 +237,19 @@ public class LambdasTestAntiSeche {
         Assert.assertEquals(15.5d, productService.getBasketCostVersion5(), EPSILON);
     }
 
-    private static LambdasAntiSeche.Product createProduct(Long id, String code, Double price, LambdasAntiSeche.ProductTypeEnum type) {
-        LambdasAntiSeche.Product product = new LambdasAntiSeche.Product(id, code);
+    private static Product createProduct(Long id, String code, Double price, ProductTypeEnum type) {
+        Product product = new Product(id, code);
         product.setPrice(price);
         product.setType(type);
         return product;
     }
 
-    private static LambdasAntiSeche.SectionPart createSection(Long id, Long productId, Double price) {
-        return new LambdasAntiSeche.SectionPart(id, productId, price);
+    private static SectionPart createSection(Long id, Long productId, Double price) {
+        return new SectionPart(id, productId, price);
     }
 
-    private static LambdasAntiSeche.Discount createDiscount(LambdasAntiSeche.ProductTypeEnum productType, Double flat, Double percent) {
-        LambdasAntiSeche.Discount discount = new LambdasAntiSeche.Discount(productType);
+    private static Discount createDiscount(ProductTypeEnum productType, Double flat, Double percent) {
+        Discount discount = new Discount(productType);
         if (flat != null) {
             discount.setDiscountFlat(flat);
         }
@@ -291,52 +293,52 @@ public class LambdasTestAntiSeche {
 
         BasketCostBuilder.create(productDao, discountDao)
                 .addProduct(ProductBuilder.create().id(1l).price(12d).product())
-                .addProduct(ProductBuilder.create().id(2l).price(3d).type(LambdasAntiSeche.ProductTypeEnum.BOOK).product())
+                .addProduct(ProductBuilder.create().id(2l).price(3d).type(ProductTypeEnum.BOOK).product())
                 .addSection(createSection(101L, 2L, 5d))
                 .addSection(createSection(102L, 666L, 999d))
-                .addDiscount(createDiscount(LambdasAntiSeche.ProductTypeEnum.BOOK, 1d, null))
+                .addDiscount(createDiscount(ProductTypeEnum.BOOK, 1d, null))
                 .build();
 
         Assert.assertEquals(16d, productService.getBasketCostVersion5(), EPSILON);
 
         BasketCostBuilder.create(productDao, discountDao)
                 .addProduct(ProductBuilder.create().id(1l).price(12d).product())
-                .addProduct(ProductBuilder.create().id(2l).price(3d).type(LambdasAntiSeche.ProductTypeEnum.BOOK).product())
+                .addProduct(ProductBuilder.create().id(2l).price(3d).type(ProductTypeEnum.BOOK).product())
                 .addSection(createSection(101L, 2L, 5d))
                 .addSection(createSection(102L, 666L, 999d))
-                .addDiscount(createDiscount(LambdasAntiSeche.ProductTypeEnum.BOOK, 1d, 0.1d))
+                .addDiscount(createDiscount(ProductTypeEnum.BOOK, 1d, 0.1d))
                 .build();
 
         Assert.assertEquals(15.5d, productService.getBasketCostVersion5(), EPSILON);
     }
 
     private static class BasketCostBuilder {
-        LambdasAntiSeche.ProductDao productDao;
-        LambdasAntiSeche.DiscountDao discountDao;
+        ProductDao productDao;
+        DiscountDao discountDao;
         List<LambdasAntiSeche.Product> products = new ArrayList<>();
         List<LambdasAntiSeche.SectionPart> sections = new ArrayList<>();
         List<LambdasAntiSeche.Discount> discounts = new ArrayList<>();
 
-        private BasketCostBuilder(LambdasAntiSeche.ProductDao productDao, LambdasAntiSeche.DiscountDao discountDao) {
+        private BasketCostBuilder(ProductDao productDao, DiscountDao discountDao) {
             this.productDao = productDao;
             this.discountDao = discountDao;
         }
 
-        static BasketCostBuilder create(LambdasAntiSeche.ProductDao productDao, LambdasAntiSeche.DiscountDao discountDao) {
+        static BasketCostBuilder create(ProductDao productDao, DiscountDao discountDao) {
             return new BasketCostBuilder(productDao, discountDao);
         }
 
-        BasketCostBuilder addProduct(LambdasAntiSeche.Product product) {
+        BasketCostBuilder addProduct(Product product) {
             products.add(product);
             return this;
         }
 
-        BasketCostBuilder addSection(LambdasAntiSeche.SectionPart sectionPart) {
+        BasketCostBuilder addSection(SectionPart sectionPart) {
             sections.add(sectionPart);
             return this;
         }
 
-        BasketCostBuilder addDiscount(LambdasAntiSeche.Discount discount) {
+        BasketCostBuilder addDiscount(Discount discount) {
             discounts.add(discount);
             return this;
         }
@@ -351,7 +353,7 @@ public class LambdasTestAntiSeche {
     private static class ProductBuilder {
         Long id;
         double price;
-        LambdasAntiSeche.ProductTypeEnum type;
+        ProductTypeEnum type;
 
         static ProductBuilder create() {
             return new ProductBuilder();
@@ -367,13 +369,13 @@ public class LambdasTestAntiSeche {
             return this;
         }
 
-        ProductBuilder type(LambdasAntiSeche.ProductTypeEnum type) {
+        ProductBuilder type(ProductTypeEnum type) {
             this.type = type;
             return this;
         }
 
-        LambdasAntiSeche.Product product() {
-            LambdasAntiSeche.Product product = new LambdasAntiSeche.Product(id, "osef");
+        Product product() {
+            Product product = new Product(id, "osef");
             product.setPrice(price);
             product.setType(type);
             return product;
@@ -407,40 +409,40 @@ public class LambdasTestAntiSeche {
 
         BasketCostBuilderGWT.create(productDao, discountDao)
                 .addProduct(ProductBuilderGWT.create().price(12d))
-                .addProduct(ProductBuilderGWT.create().price(3d).type(LambdasAntiSeche.ProductTypeEnum.BOOK).withSection(SectionPartBuilderGWT.create().price(5d)))
-                .addDiscount(createDiscount(LambdasAntiSeche.ProductTypeEnum.BOOK, 1d, null))
+                .addProduct(ProductBuilderGWT.create().price(3d).type(ProductTypeEnum.BOOK).withSection(SectionPartBuilderGWT.create().price(5d)))
+                .addDiscount(createDiscount(ProductTypeEnum.BOOK, 1d, null))
                 .whenGetBasketCostVersion5(productService)
                 .thenResultShouldBe(16d);
 
         BasketCostBuilderGWT.create(productDao, discountDao)
                 .addProduct(ProductBuilderGWT.create().price(12d))
-                .addProduct(ProductBuilderGWT.create().price(3d).type(LambdasAntiSeche.ProductTypeEnum.BOOK).withSection(SectionPartBuilderGWT.create().price(5d)))
-                .addDiscount(createDiscount(LambdasAntiSeche.ProductTypeEnum.BOOK, 1d, 0.1d))
+                .addProduct(ProductBuilderGWT.create().price(3d).type(ProductTypeEnum.BOOK).withSection(SectionPartBuilderGWT.create().price(5d)))
+                .addDiscount(createDiscount(ProductTypeEnum.BOOK, 1d, 0.1d))
                 .whenGetBasketCostVersion5(productService)
                 .thenResultShouldBe(15.5d);
     }
 
     private static class BasketCostBuilderGWT {
         static long cpt = 1;
-        LambdasAntiSeche.ProductDao productDao;
-        LambdasAntiSeche.DiscountDao discountDao;
+        ProductDao productDao;
+        DiscountDao discountDao;
         List<LambdasAntiSeche.Product> products = new ArrayList<>();
         List<LambdasAntiSeche.SectionPart> sections = new ArrayList<>();
         List<LambdasAntiSeche.Discount> discounts = new ArrayList<>();
         Double result;
 
-        private BasketCostBuilderGWT(LambdasAntiSeche.ProductDao productDao, LambdasAntiSeche.DiscountDao discountDao) {
+        private BasketCostBuilderGWT(ProductDao productDao, DiscountDao discountDao) {
             this.productDao = productDao;
             this.discountDao = discountDao;
         }
 
-        static BasketCostBuilderGWT create(LambdasAntiSeche.ProductDao productDao, LambdasAntiSeche.DiscountDao discountDao) {
+        static BasketCostBuilderGWT create(ProductDao productDao, DiscountDao discountDao) {
             return new BasketCostBuilderGWT(productDao, discountDao);
         }
 
         BasketCostBuilderGWT addProduct(ProductBuilderGWT productBuilder) {
             products.add(productBuilder.product(cpt));
-            LambdasAntiSeche.SectionPart sectionPart = productBuilder.sectionPart(cpt);
+            SectionPart sectionPart = productBuilder.sectionPart(cpt);
             if (sectionPart != null) {
                 sections.add(sectionPart);
             }
@@ -448,17 +450,17 @@ public class LambdasTestAntiSeche {
             return this;
         }
 
-        BasketCostBuilderGWT addSection(LambdasAntiSeche.SectionPart sectionPart) {
+        BasketCostBuilderGWT addSection(SectionPart sectionPart) {
             sections.add(sectionPart);
             return this;
         }
 
-        BasketCostBuilderGWT addDiscount(LambdasAntiSeche.Discount discount) {
+        BasketCostBuilderGWT addDiscount(Discount discount) {
             discounts.add(discount);
             return this;
         }
 
-        BasketCostBuilderGWT whenGetBasketCostVersion5(LambdasAntiSeche.ProductService productService) {
+        BasketCostBuilderGWT whenGetBasketCostVersion5(ProductService productService) {
             sections.add(createSection(102L, 666L, 999d));
 
             Mockito.when(productDao.getProductsInBasket()).thenReturn(products);
@@ -477,7 +479,7 @@ public class LambdasTestAntiSeche {
 
     private static class ProductBuilderGWT {
         double price;
-        LambdasAntiSeche.ProductTypeEnum type;
+        ProductTypeEnum type;
         SectionPartBuilderGWT sectionPartBuilder;
 
         static ProductBuilderGWT create() {
@@ -489,7 +491,7 @@ public class LambdasTestAntiSeche {
             return this;
         }
 
-        ProductBuilderGWT type(LambdasAntiSeche.ProductTypeEnum type) {
+        ProductBuilderGWT type(ProductTypeEnum type) {
             this.type = type;
             return this;
         }
@@ -499,14 +501,14 @@ public class LambdasTestAntiSeche {
             return this;
         }
 
-        LambdasAntiSeche.Product product(Long idProduct) {
-            LambdasAntiSeche.Product product = new LambdasAntiSeche.Product(idProduct, "osef");
+        Product product(Long idProduct) {
+            Product product = new Product(idProduct, "osef");
             product.setPrice(price);
             product.setType(type);
             return product;
         }
 
-        LambdasAntiSeche.SectionPart sectionPart(Long idProduct) {
+        SectionPart sectionPart(Long idProduct) {
             if (sectionPartBuilder == null) {
                 return null;
             }
@@ -527,8 +529,8 @@ public class LambdasTestAntiSeche {
             return this;
         }
 
-        LambdasAntiSeche.SectionPart sectionPart(Long id, Long idProduct) {
-            return new LambdasAntiSeche.SectionPart(id, idProduct, price);
+        SectionPart sectionPart(Long id, Long idProduct) {
+            return new SectionPart(id, idProduct, price);
         }
     }
 }
