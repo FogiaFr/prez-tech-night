@@ -5,13 +5,13 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static com.mkl.prez.technight.LambdasAntiSeche.*;
+import static org.mockito.Mockito.when;
 
 /**
  * Description of the class.
@@ -32,12 +32,12 @@ public class LambdasTestAntiSeche {
 
     @Test
     public void testGetBasketCostVersion1() {
-        List<LambdasAntiSeche.Product> products = new ArrayList<>();
+        List<Product> products = new ArrayList<>();
         Product product = new Product(1L, "toto");
         product.setPrice(12d);
         products.add(product);
 
-        Mockito.when(productDao.getProductsInBasket()).thenReturn(products);
+        when(productDao.getProductsInBasket()).thenReturn(products);
 
         Assert.assertEquals(12d, productService.getBasketCostVersion1(), EPSILON);
 
@@ -50,12 +50,12 @@ public class LambdasTestAntiSeche {
 
     @Test
     public void testGetBasketCostVersion2() {
-        List<LambdasAntiSeche.Product> products = new ArrayList<>();
+        List<Product> products = new ArrayList<>();
         Product product = new Product(1L, "toto");
         product.setPrice(12d);
         products.add(product);
 
-        Mockito.when(productDao.getProductsInBasket()).thenReturn(products);
+        when(productDao.getProductsInBasket()).thenReturn(products);
 
         Assert.assertEquals(12d, productService.getBasketCostVersion2(), EPSILON);
 
@@ -65,11 +65,11 @@ public class LambdasTestAntiSeche {
 
         Assert.assertEquals(15d, productService.getBasketCostVersion2(), EPSILON);
 
-        List<LambdasAntiSeche.SectionPart> sections = new ArrayList<>();
+        List<SectionPart> sections = new ArrayList<>();
         SectionPart section = new SectionPart(101L, 2L, 5d);
         sections.add(section);
 
-        Mockito.when(productDao.getSectionOfBasket()).thenReturn(sections);
+        when(productDao.getSectionOfBasket()).thenReturn(sections);
 
         Assert.assertEquals(17d, productService.getBasketCostVersion2(), EPSILON);
 
@@ -81,12 +81,12 @@ public class LambdasTestAntiSeche {
 
     @Test
     public void testGetBasketCostVersion3() {
-        List<LambdasAntiSeche.Product> products = new ArrayList<>();
+        List<Product> products = new ArrayList<>();
         Product product = new Product(1L, "toto");
         product.setPrice(12d);
         products.add(product);
 
-        Mockito.when(productDao.getProductsInBasket()).thenReturn(products);
+        when(productDao.getProductsInBasket()).thenReturn(products);
 
         Assert.assertEquals(12d, productService.getBasketCostVersion3(), EPSILON);
 
@@ -96,11 +96,11 @@ public class LambdasTestAntiSeche {
 
         Assert.assertEquals(15d, productService.getBasketCostVersion3(), EPSILON);
 
-        List<LambdasAntiSeche.SectionPart> sections = new ArrayList<>();
+        List<SectionPart> sections = new ArrayList<>();
         SectionPart section = new SectionPart(101L, 2L, 5d);
         sections.add(section);
 
-        Mockito.when(productDao.getSectionOfBasket()).thenReturn(sections);
+        when(productDao.getSectionOfBasket()).thenReturn(sections);
 
         Assert.assertEquals(17d, productService.getBasketCostVersion3(), EPSILON);
 
@@ -112,12 +112,12 @@ public class LambdasTestAntiSeche {
 
     @Test
     public void testGetBasketCostVersion4() {
-        List<LambdasAntiSeche.Product> products = new ArrayList<>();
+        List<Product> products = new ArrayList<>();
         Product product = new Product(1L, "toto");
         product.setPrice(12d);
         products.add(product);
 
-        Mockito.when(productDao.getProductsInBasket()).thenReturn(products);
+        when(productDao.getProductsInBasket()).thenReturn(products);
 
         Assert.assertEquals(12d, productService.getBasketCostVersion4(), EPSILON);
 
@@ -127,11 +127,11 @@ public class LambdasTestAntiSeche {
 
         Assert.assertEquals(15d, productService.getBasketCostVersion4(), EPSILON);
 
-        List<LambdasAntiSeche.SectionPart> sections = new ArrayList<>();
+        List<SectionPart> sections = new ArrayList<>();
         SectionPart section = new SectionPart(101L, 2L, 5d);
         sections.add(section);
 
-        Mockito.when(productDao.getSectionOfBasket()).thenReturn(sections);
+        when(productDao.getSectionOfBasket()).thenReturn(sections);
 
         Assert.assertEquals(17d, productService.getBasketCostVersion4(), EPSILON);
 
@@ -140,13 +140,13 @@ public class LambdasTestAntiSeche {
 
         Assert.assertEquals(17d, productService.getBasketCostVersion4(), EPSILON);
 
-        List<LambdasAntiSeche.Discount> discounts = new ArrayList<>();
+        List<Discount> discounts = new ArrayList<>();
         Discount discount = new Discount(ProductTypeEnum.BOOK);
         discount.setDiscountFlat(1d);
         discounts.add(discount);
         product.setType(ProductTypeEnum.BOOK);
 
-        Mockito.when(discountDao.getDiscounts()).thenReturn(discounts);
+        when(discountDao.getDiscounts()).thenReturn(discounts);
 
         Assert.assertEquals(16d, productService.getBasketCostVersion4(), EPSILON);
 
@@ -157,12 +157,12 @@ public class LambdasTestAntiSeche {
 
     @Test
     public void testGetBasketCostVersion5() {
-        List<LambdasAntiSeche.Product> products = new ArrayList<>();
+        List<Product> products = new ArrayList<>();
         Product product = new Product(1L, "toto");
         product.setPrice(12d);
         products.add(product);
 
-        Mockito.when(productDao.getProductsInBasket()).thenReturn(products);
+        when(productDao.getProductsInBasket()).thenReturn(products);
 
         Assert.assertEquals(12d, productService.getBasketCostVersion5(), EPSILON);
 
@@ -172,11 +172,11 @@ public class LambdasTestAntiSeche {
 
         Assert.assertEquals(15d, productService.getBasketCostVersion5(), EPSILON);
 
-        List<LambdasAntiSeche.SectionPart> sections = new ArrayList<>();
+        List<SectionPart> sections = new ArrayList<>();
         SectionPart section = new SectionPart(101L, 2L, 5d);
         sections.add(section);
 
-        Mockito.when(productDao.getSectionOfBasket()).thenReturn(sections);
+        when(productDao.getSectionOfBasket()).thenReturn(sections);
 
         Assert.assertEquals(17d, productService.getBasketCostVersion5(), EPSILON);
 
@@ -185,13 +185,13 @@ public class LambdasTestAntiSeche {
 
         Assert.assertEquals(17d, productService.getBasketCostVersion5(), EPSILON);
 
-        List<LambdasAntiSeche.Discount> discounts = new ArrayList<>();
+        List<Discount> discounts = new ArrayList<>();
         Discount discount = new Discount(ProductTypeEnum.BOOK);
         discount.setDiscountFlat(1d);
         discounts.add(discount);
         product.setType(ProductTypeEnum.BOOK);
 
-        Mockito.when(discountDao.getDiscounts()).thenReturn(discounts);
+        when(discountDao.getDiscounts()).thenReturn(discounts);
 
         Assert.assertEquals(16d, productService.getBasketCostVersion5(), EPSILON);
 
@@ -202,10 +202,10 @@ public class LambdasTestAntiSeche {
 
     @Test
     public void testGetBasketCostVersion5Style() {
-        List<LambdasAntiSeche.Product> products = new ArrayList<>();
+        List<Product> products = new ArrayList<>();
         products.add(createProduct(1l, "toto", 12d, null));
 
-        Mockito.when(productDao.getProductsInBasket()).thenReturn(products);
+        when(productDao.getProductsInBasket()).thenReturn(products);
 
         Assert.assertEquals(12d, productService.getBasketCostVersion5(), EPSILON);
 
@@ -213,10 +213,10 @@ public class LambdasTestAntiSeche {
 
         Assert.assertEquals(15d, productService.getBasketCostVersion5(), EPSILON);
 
-        List<LambdasAntiSeche.SectionPart> sections = new ArrayList<>();
+        List<SectionPart> sections = new ArrayList<>();
         sections.add(createSection(101L, 2L, 5d));
 
-        Mockito.when(productDao.getSectionOfBasket()).thenReturn(sections);
+        when(productDao.getSectionOfBasket()).thenReturn(sections);
 
         Assert.assertEquals(17d, productService.getBasketCostVersion5(), EPSILON);
 
@@ -224,39 +224,17 @@ public class LambdasTestAntiSeche {
 
         Assert.assertEquals(17d, productService.getBasketCostVersion5(), EPSILON);
 
-        List<LambdasAntiSeche.Discount> discounts = new ArrayList<>();
+        List<Discount> discounts = new ArrayList<>();
         Discount discount = createDiscount(ProductTypeEnum.BOOK, 1d, null);
         discounts.add(discount);
 
-        Mockito.when(discountDao.getDiscounts()).thenReturn(discounts);
+        when(discountDao.getDiscounts()).thenReturn(discounts);
 
         Assert.assertEquals(16d, productService.getBasketCostVersion5(), EPSILON);
 
         discount.setDiscountPercentage(0.1d);
 
         Assert.assertEquals(15.5d, productService.getBasketCostVersion5(), EPSILON);
-    }
-
-    private static Product createProduct(Long id, String code, Double price, ProductTypeEnum type) {
-        Product product = new Product(id, code);
-        product.setPrice(price);
-        product.setType(type);
-        return product;
-    }
-
-    private static SectionPart createSection(Long id, Long productId, Double price) {
-        return new SectionPart(id, productId, price);
-    }
-
-    private static Discount createDiscount(ProductTypeEnum productType, Double flat, Double percent) {
-        Discount discount = new Discount(productType);
-        if (flat != null) {
-            discount.setDiscountFlat(flat);
-        }
-        if (percent != null) {
-            discount.setDiscountPercentage(percent);
-        }
-        return discount;
     }
 
     @Test
@@ -315,9 +293,9 @@ public class LambdasTestAntiSeche {
     private static class BasketCostBuilder {
         ProductDao productDao;
         DiscountDao discountDao;
-        List<LambdasAntiSeche.Product> products = new ArrayList<>();
-        List<LambdasAntiSeche.SectionPart> sections = new ArrayList<>();
-        List<LambdasAntiSeche.Discount> discounts = new ArrayList<>();
+        List<Product> products = new ArrayList<>();
+        List<SectionPart> sections = new ArrayList<>();
+        List<Discount> discounts = new ArrayList<>();
 
         private BasketCostBuilder(ProductDao productDao, DiscountDao discountDao) {
             this.productDao = productDao;
@@ -344,9 +322,9 @@ public class LambdasTestAntiSeche {
         }
 
         void build() {
-            Mockito.when(productDao.getProductsInBasket()).thenReturn(products);
-            Mockito.when(productDao.getSectionOfBasket()).thenReturn(sections);
-            Mockito.when(discountDao.getDiscounts()).thenReturn(discounts);
+            when(productDao.getProductsInBasket()).thenReturn(products);
+            when(productDao.getSectionOfBasket()).thenReturn(sections);
+            when(discountDao.getDiscounts()).thenReturn(discounts);
         }
     }
 
@@ -426,9 +404,9 @@ public class LambdasTestAntiSeche {
         static long cpt = 1;
         ProductDao productDao;
         DiscountDao discountDao;
-        List<LambdasAntiSeche.Product> products = new ArrayList<>();
-        List<LambdasAntiSeche.SectionPart> sections = new ArrayList<>();
-        List<LambdasAntiSeche.Discount> discounts = new ArrayList<>();
+        List<Product> products = new ArrayList<>();
+        List<SectionPart> sections = new ArrayList<>();
+        List<Discount> discounts = new ArrayList<>();
         Double result;
 
         private BasketCostBuilderGWT(ProductDao productDao, DiscountDao discountDao) {
@@ -463,9 +441,9 @@ public class LambdasTestAntiSeche {
         BasketCostBuilderGWT whenGetBasketCostVersion5(ProductService productService) {
             sections.add(createSection(102L, 666L, 999d));
 
-            Mockito.when(productDao.getProductsInBasket()).thenReturn(products);
-            Mockito.when(productDao.getSectionOfBasket()).thenReturn(sections);
-            Mockito.when(discountDao.getDiscounts()).thenReturn(discounts);
+            when(productDao.getProductsInBasket()).thenReturn(products);
+            when(productDao.getSectionOfBasket()).thenReturn(sections);
+            when(discountDao.getDiscounts()).thenReturn(discounts);
 
             result = productService.getBasketCostVersion5();
 
@@ -532,5 +510,27 @@ public class LambdasTestAntiSeche {
         SectionPart sectionPart(Long id, Long idProduct) {
             return new SectionPart(id, idProduct, price);
         }
+    }
+
+    private static Product createProduct(Long id, String code, Double price, ProductTypeEnum type) {
+        Product product = new Product(id, code);
+        product.setPrice(price);
+        product.setType(type);
+        return product;
+    }
+
+    private static SectionPart createSection(Long id, Long productId, Double price) {
+        return new SectionPart(id, productId, price);
+    }
+
+    private static Discount createDiscount(ProductTypeEnum productType, Double flat, Double percent) {
+        Discount discount = new Discount(productType);
+        if (flat != null) {
+            discount.setDiscountFlat(flat);
+        }
+        if (percent != null) {
+            discount.setDiscountPercentage(percent);
+        }
+        return discount;
     }
 }

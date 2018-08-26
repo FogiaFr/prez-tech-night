@@ -27,6 +27,5 @@ public class LambdasTest {
 
     @Test
     public void testGetBasketCost() {
-
     }
 }
