@@ -15,6 +15,9 @@ public class Lambdas {
 
 
     public static void main(String... args) {
+        /**
+         Thanks to Victor Rentea, Mario Fusco and Rémi Forax for their devoxx !
+         */
         List<Product> products = createList();
     }
 
