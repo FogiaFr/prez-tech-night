@@ -19,7 +19,7 @@ import static org.mockito.Mockito.when;
  * @author MKL.
  */
 @RunWith(MockitoJUnitRunner.class)
-public class LambdasTestAntiSeche {
+public class LambdasAntiSecheTest {
     private static final double EPSILON = 0.0001d;
     @InjectMocks
     private ProductService productService;
@@ -360,6 +360,17 @@ public class LambdasTestAntiSeche {
         }
     }
 
+    private static Discount createDiscount(ProductTypeEnum productType, Double flat, Double percent) {
+        Discount discount = new Discount(productType);
+        if (flat != null) {
+            discount.setDiscountFlat(flat);
+        }
+        if (percent != null) {
+            discount.setDiscountPercentage(percent);
+        }
+        return discount;
+    }
+
     @Test
     public void testGetBasketCostVersion5GWT() {
         BasketCostBuilderGWT.create(productDao, discountDao)
@@ -388,14 +399,14 @@ public class LambdasTestAntiSeche {
         BasketCostBuilderGWT.create(productDao, discountDao)
                 .addProduct(ProductBuilderGWT.create().price(12d))
                 .addProduct(ProductBuilderGWT.create().price(3d).type(ProductTypeEnum.BOOK).withSection(SectionPartBuilderGWT.create().price(5d)))
-                .addDiscount(createDiscount(ProductTypeEnum.BOOK, 1d, null))
+                .addDiscount(DiscountBuilderGWT.create().productType(ProductTypeEnum.BOOK).discountFlat(1d).discount())
                 .whenGetBasketCostVersion5(productService)
                 .thenResultShouldBe(16d);
 
         BasketCostBuilderGWT.create(productDao, discountDao)
                 .addProduct(ProductBuilderGWT.create().price(12d))
                 .addProduct(ProductBuilderGWT.create().price(3d).type(ProductTypeEnum.BOOK).withSection(SectionPartBuilderGWT.create().price(5d)))
-                .addDiscount(createDiscount(ProductTypeEnum.BOOK, 1d, 0.1d))
+                .addDiscount(DiscountBuilderGWT.create().productType(ProductTypeEnum.BOOK).discountFlat(1d).discountPercentage(0.1d).discount())
                 .whenGetBasketCostVersion5(productService)
                 .thenResultShouldBe(15.5d);
     }
@@ -512,6 +523,43 @@ public class LambdasTestAntiSeche {
         }
     }
 
+    private static class DiscountBuilderGWT {
+        ProductTypeEnum productType;
+        Double discountFlat;
+        Double discountPercentage;
+
+        static DiscountBuilderGWT create() {
+            return new DiscountBuilderGWT();
+        }
+
+        DiscountBuilderGWT productType(ProductTypeEnum productType) {
+            this.productType = productType;
+            return this;
+        }
+
+        DiscountBuilderGWT discountFlat(Double discountFlat) {
+            this.discountFlat = discountFlat;
+            return this;
+        }
+
+        DiscountBuilderGWT discountPercentage(Double discountPercentage) {
+            this.discountPercentage = discountPercentage;
+            return this;
+        }
+
+        Discount discount() {
+            Discount discount = new Discount(productType);
+            if (discountFlat != null) {
+                discount.setDiscountFlat(discountFlat);
+            }
+            if (discountPercentage != null) {
+                discount.setDiscountPercentage(discountPercentage);
+            }
+
+            return discount;
+        }
+    }
+
     private static Product createProduct(Long id, String code, Double price, ProductTypeEnum type) {
         Product product = new Product(id, code);
         product.setPrice(price);
@@ -521,16 +569,5 @@ public class LambdasTestAntiSeche {
 
     private static SectionPart createSection(Long id, Long productId, Double price) {
         return new SectionPart(id, productId, price);
-    }
-
-    private static Discount createDiscount(ProductTypeEnum productType, Double flat, Double percent) {
-        Discount discount = new Discount(productType);
-        if (flat != null) {
-            discount.setDiscountFlat(flat);
-        }
-        if (percent != null) {
-            discount.setDiscountPercentage(percent);
-        }
-        return discount;
     }
 }
