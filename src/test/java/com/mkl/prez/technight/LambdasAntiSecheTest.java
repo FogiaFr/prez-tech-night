@@ -375,39 +375,39 @@ public class LambdasAntiSecheTest {
     public void testGetBasketCostVersion5GWT() {
         BasketCostBuilderGWT.create(productDao, discountDao)
                 .addProduct(ProductBuilderGWT.create().price(12d))
-                .whenGetBasketCostVersion5(productService)
+                .whenGetBasketCost(productService)
                 .thenResultShouldBe(12d);
 
         BasketCostBuilderGWT.create(productDao, discountDao)
                 .addProduct(ProductBuilderGWT.create().price(12d))
                 .addProduct(ProductBuilderGWT.create().price(3d))
-                .whenGetBasketCostVersion5(productService)
+                .whenGetBasketCost(productService)
                 .thenResultShouldBe(15d);
 
         BasketCostBuilderGWT.create(productDao, discountDao)
                 .addProduct(ProductBuilderGWT.create().price(12d))
                 .addProduct(ProductBuilderGWT.create().price(3d).withSection(SectionPartBuilderGWT.create().price(5d)))
-                .whenGetBasketCostVersion5(productService)
+                .whenGetBasketCost(productService)
                 .thenResultShouldBe(17d);
 
         BasketCostBuilderGWT.create(productDao, discountDao)
                 .addProduct(ProductBuilderGWT.create().price(12d))
                 .addProduct(ProductBuilderGWT.create().price(3d).withSection(SectionPartBuilderGWT.create().price(5d)))
-                .whenGetBasketCostVersion5(productService)
+                .whenGetBasketCost(productService)
                 .thenResultShouldBe(17d);
 
         BasketCostBuilderGWT.create(productDao, discountDao)
                 .addProduct(ProductBuilderGWT.create().price(12d))
                 .addProduct(ProductBuilderGWT.create().price(3d).type(ProductTypeEnum.BOOK).withSection(SectionPartBuilderGWT.create().price(5d)))
                 .addDiscount(DiscountBuilderGWT.create().productType(ProductTypeEnum.BOOK).discountFlat(1d).discount())
-                .whenGetBasketCostVersion5(productService)
+                .whenGetBasketCost(productService)
                 .thenResultShouldBe(16d);
 
         BasketCostBuilderGWT.create(productDao, discountDao)
                 .addProduct(ProductBuilderGWT.create().price(12d))
                 .addProduct(ProductBuilderGWT.create().price(3d).type(ProductTypeEnum.BOOK).withSection(SectionPartBuilderGWT.create().price(5d)))
                 .addDiscount(DiscountBuilderGWT.create().productType(ProductTypeEnum.BOOK).discountFlat(1d).discountPercentage(0.1d).discount())
-                .whenGetBasketCostVersion5(productService)
+                .whenGetBasketCost(productService)
                 .thenResultShouldBe(15.5d);
     }
 
@@ -439,24 +439,19 @@ public class LambdasAntiSecheTest {
             return this;
         }
 
-        BasketCostBuilderGWT addSection(SectionPart sectionPart) {
-            sections.add(sectionPart);
-            return this;
-        }
-
         BasketCostBuilderGWT addDiscount(Discount discount) {
             discounts.add(discount);
             return this;
         }
 
-        BasketCostBuilderGWT whenGetBasketCostVersion5(ProductService productService) {
+        BasketCostBuilderGWT whenGetBasketCost(ProductService productService) {
             sections.add(createSection(102L, 666L, 999d));
 
             when(productDao.getProductsInBasket()).thenReturn(products);
             when(productDao.getSectionOfBasket()).thenReturn(sections);
             when(discountDao.getDiscounts()).thenReturn(discounts);
 
-            result = productService.getBasketCostVersion5();
+            result = productService.getBasketCost();
 
             return this;
         }

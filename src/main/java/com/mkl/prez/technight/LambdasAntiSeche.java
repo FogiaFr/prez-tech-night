@@ -172,15 +172,8 @@ public class LambdasAntiSeche {
                     .collect(Collectors.summingDouble(getPrice));
         }
 
-        // ???
         Double getBasketCost() {
-            List<Product> products = productDao.getProductsInBasket();
-            List<SectionPart> sections = productDao.getSectionOfBasket();
-            Map<Long, Double> priceByProductIds = sections.stream()
-                    .collect(Collectors.groupingBy(SectionPart::getProductId,
-                            Collectors.averagingDouble(SectionPart::getPrice)));
-            return products.stream()
-                    .collect(Collectors.summingDouble(product -> priceByProductIds.get(product.getId())));
+            return getBasketCostVersion5();
         }
     }
 
