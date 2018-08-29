@@ -392,12 +392,6 @@ public class LambdasAntiSecheTest {
 
         BasketCostBuilderGWT.create(productDao, discountDao)
                 .addProduct(ProductBuilderGWT.create().price(12d))
-                .addProduct(ProductBuilderGWT.create().price(3d).withSection(SectionPartBuilderGWT.create().price(5d)))
-                .whenGetBasketCost(productService)
-                .thenResultShouldBe(17d);
-
-        BasketCostBuilderGWT.create(productDao, discountDao)
-                .addProduct(ProductBuilderGWT.create().price(12d))
                 .addProduct(ProductBuilderGWT.create().price(3d).type(ProductTypeEnum.BOOK).withSection(SectionPartBuilderGWT.create().price(5d)))
                 .addDiscount(DiscountBuilderGWT.create().productType(ProductTypeEnum.BOOK).discountFlat(1d).discount())
                 .whenGetBasketCost(productService)
